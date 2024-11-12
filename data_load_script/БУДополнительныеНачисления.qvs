@@ -1,0 +1,52 @@
+///$tab БУДополнительныеНачисления
+Sub БУДополнительныеНачисления;
+
+Let vURL = '$(vServer)/CalculationRegister_БУДополнительныеНачисления_RecordType?$filter=year(RegistrationPeriod)%20ge%202019&$select=RegistrationPeriod,Организация_Key,Сотрудник,Результат,ОбособленноеПодразделение_Key,CalculationType_Key,СубконтоДт1&$format=json';
+
+CUSTOM Connect To $(vConnectionString);
+
+RestConnectorMasterTable:
+NoConcatenate
+SQL 
+SELECT 
+	"__KEY_root",
+	(SELECT 
+		"RegistrationPeriod",
+        "Организация_Key",
+        "Сотрудник",
+        "Результат",
+        "ОбособленноеПодразделение_Key",
+		"CalculationType_Key",
+        "СубконтоДт1",
+		"__FK_value"
+	FROM "value" FK "__FK_value")
+FROM JSON (wrap on) "root" PK "__KEY_root"
+WITH CONNECTION(
+URL "$(vURL)",
+HTTPHEADER "Authorization" "Basic $(vCreds)")
+;
+
+Qualify *;
+
+[БУДополнительныеНачисления]:
+NoConcatenate
+LOAD	
+	[RegistrationPeriod],
+    [Организация_Key],
+    [Сотрудник],
+    [Результат],
+    [ОбособленноеПодразделение_Key],
+    [CalculationType_Key],
+    [СубконтоДт1]
+RESIDENT 
+	RestConnectorMasterTable
+WHERE 
+	NOT IsNull([__FK_value]);
+
+DROP TABLE RestConnectorMasterTable;
+
+Unqualify *;
+
+DisConnect;
+
+EndSub;

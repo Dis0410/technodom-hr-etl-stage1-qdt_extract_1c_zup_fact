@@ -1,0 +1,135 @@
+///$tab РабочееВремяРаботниковОрганизаций
+Sub РабочееВремяРаботниковОрганизаций;
+
+If WeekDay(Today(1), 0) = 5 then
+
+    Let vStartDate = Date('01.01.2019');
+    
+Else
+
+	Let vStartDate = Date(YearStart(AddYears(Today(1), -1)));
+
+EndIf;
+
+// Let vStartDate = Date('01.01.2019');
+Let vEndDate = Date(Today(1));
+// Let vEndDate = Date('31.12.2022');
+
+Quarters:
+NoConcatenate
+Load
+	Distinct
+    Ceil(Month(AddMonths('$(vStartDate)', IterNo() - 1))/3) as Quarter,
+    Year(AddMonths('$(vStartDate)', IterNo() - 1)) as Year
+AutoGenerate (1)
+While
+	Date(AddMonths('$(vStartDate)', IterNo() - 1), 'MMYYYY') <= Date('$(vEndDate)', 'MMYYYY')
+;
+
+For Each vYear in FieldValueList('Year')
+
+    РабочееВремяРаботниковОрганизаций_$(vYear)_Temp:
+    NoConcatenate
+    Load
+        Null() as Recorder
+    AutoGenerate (0);
+    
+    QuartersYear:
+    NoConcatenate
+    Load
+    	Quarter as QuarterYear
+    Resident
+    	Quarters
+    Where
+    	Year = '$(vYear)'
+    ;
+
+    For Each vQuarter in FieldValueList('QuarterYear')
+
+        Let vURL = '$(vServer)/AccumulationRegister_РабочееВремяРаботниковОрганизаций_RecordType?$filter=year(Period)%20eq%20$(vYear)%20and%20quarter(Period)%20eq%20$(vQuarter)&$format=json';
+
+        CUSTOM Connect To $(vConnectionString);
+
+        RestConnectorMasterTable:
+        NoConcatenate
+        SQL 
+        SELECT 
+            "__KEY_root",
+            (SELECT 
+                "Period",
+                "Recorder",
+                "Recorder_Type",
+                "LineNumber",
+                "Active",
+                "Сотрудник_Key",
+                "Организация_Key",
+                "ВидИспользованияРабочегоВремени_Key",
+                "УдалитьФизлицо_Key",
+                "УдалитьПриказ_Key",
+                "Дней",
+                "Часов",
+                "ДнейПоНорме",
+                "ЧасовПоНорме",
+                "СводнаяЗапись",
+                "ВЦеломЗаПериод",
+                "ВидВремениОтсутствуетВДокументе",
+                "ВидИспользованияРабочегоВремениКадровый_Key",
+                "__FK_value"
+            FROM "value" FK "__FK_value")
+        FROM JSON (wrap on) "root" PK "__KEY_root"
+        WITH CONNECTION(
+        URL "$(vURL)",
+        HTTPHEADER "Authorization" "Basic $(vCreds)")
+        ;
+
+        Concatenate (РабочееВремяРаботниковОрганизаций_$(vYear)_Temp)
+        LOAD	
+            [Period],
+            [Recorder],
+            [Recorder_Type],
+            [LineNumber],
+            [Active],
+            [Сотрудник_Key],
+            [Организация_Key],
+            [ВидИспользованияРабочегоВремени_Key],
+            [УдалитьФизлицо_Key],
+            [УдалитьПриказ_Key],
+            [Дней],
+            [Часов],
+            [ДнейПоНорме],
+            [ЧасовПоНорме],
+            [СводнаяЗапись],
+            [ВЦеломЗаПериод],
+            [ВидВремениОтсутствуетВДокументе],
+            [ВидИспользованияРабочегоВремениКадровый_Key]
+        RESIDENT 
+            RestConnectorMasterTable
+        WHERE 
+            NOT IsNull([__FK_value]);
+
+        DROP TABLE RestConnectorMasterTable;
+
+	Next vQuarter;
+    
+    Drop Table QuartersYear;
+    
+    Qualify *;
+    
+    РабочееВремяРаботниковОрганизаций_$(vYear):
+    NoConcatenate
+    Load
+    	*
+    Resident
+    	РабочееВремяРаботниковОрганизаций_$(vYear)_Temp;
+
+	Drop Table РабочееВремяРаботниковОрганизаций_$(vYear)_Temp;
+    
+    Unqualify *;
+
+Next vYear;
+
+Drop Table Quarters;
+
+DisConnect;
+
+EndSub;

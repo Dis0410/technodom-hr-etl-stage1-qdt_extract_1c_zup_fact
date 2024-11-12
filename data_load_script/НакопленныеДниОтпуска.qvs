@@ -1,0 +1,62 @@
+///$tab НакопленныеДниОтпуска
+Sub НакопленныеДниОтпуска;
+
+Let vYesterday = Date(Today(1)-1, 'YYYYMMDD');
+
+Let vURL = 'http://vm-cont/TD_ZP/hs/ZupExt/GetVacations/?Day=$(vYesterday)';
+
+CUSTOM Connect To $(vConnectionString);
+
+RestConnectorMasterTable:
+NoConcatenate
+SQL 
+SELECT 
+	"__KEY_Rows",
+	(SELECT 
+		"attr:EmployeeIIN" AS "EmployeeIIN",
+		"attr:EmployeeGUID" AS "EmployeeGUID",
+		"attr:Organization" AS "Organization",
+		"attr:Department" AS "Department",
+		"attr:Division" AS "Division",
+		"attr:Position" AS "Position",
+		"attr:Date" AS "Date",
+		"attr:VacationType" AS "VacationType",
+		"attr:DaysProvided" AS "DaysProvided",
+		"attr:UsedDays" AS "UsedDays",
+		"attr:UnusedDays" AS "UnusedDays",
+		"__FK_Row"
+	FROM "Row" FK "__FK_Row")
+FROM XML "Rows" PK "__KEY_Rows"
+WITH CONNECTION(
+URL "$(vURL)"
+)
+;
+
+Qualify *;
+
+[НакопленныеДниОтпуска]:
+NoConcatenate
+Load
+	[EmployeeIIN],
+	[EmployeeGUID],
+	[Organization],
+	[Department],
+	[Division],
+	[Position],
+	[Date],
+	[VacationType],
+	[DaysProvided],
+	[UsedDays],
+	[UnusedDays]
+RESIDENT 
+	RestConnectorMasterTable
+WHERE 
+	NOT IsNull([__FK_Row]);
+
+DROP TABLE RestConnectorMasterTable;
+
+Unqualify *;
+
+DisConnect;
+
+EndSub;

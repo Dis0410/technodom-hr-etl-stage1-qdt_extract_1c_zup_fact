@@ -1,0 +1,77 @@
+///$tab ООСМСРасчетыСФондами
+Sub ООСМСРасчетыСФондами;
+
+Let vURL = '$(vServer)/AccumulationRegister_ООСМСРасчетыСФондами_RecordType?$filter=year(Period)%20ge%202019&$format=json';
+
+CUSTOM Connect To $(vConnectionString);
+
+RestConnectorMasterTable:
+NoConcatenate
+SQL
+SELECT
+	"__KEY_root",
+	(SELECT 
+		"Period",
+		"Recorder",
+		"Recorder_Type",
+		"LineNumber",
+		"Active",
+		"RecordType",
+		"ФизЛицо_Key",
+		"СтруктурнаяЕдиница",
+		"СтруктурнаяЕдиница_Type",
+		"МесяцНалоговогоПериода",
+		"ВидПлатежа",
+		"Организация_Key",
+		"Налогоплательщик_Key",
+		"ПодразделениеОрганизации_Key",
+		"Отчисление",
+		"ВидСтроки",
+		"ДатаНачала",
+		"ДатаОкончания",
+		"ФизЛицо@navigationLinkUrl",
+		"Организация@navigationLinkUrl",
+		"Налогоплательщик@navigationLinkUrl",
+		"__FK_value"
+	FROM "value" FK "__FK_value")
+FROM JSON (wrap on) "root" PK "__KEY_root"
+WITH CONNECTION(
+URL "$(vURL)",
+HTTPHEADER "Authorization" "Basic $(vCreds)")
+;
+
+Qualify *;
+
+[ООСМСРасчетыСФондами]:
+NoConcatenate
+LOAD	
+	[Period],
+	[Recorder],
+	[Recorder_Type],
+	[LineNumber],
+	[Active],
+	[RecordType],
+	[ФизЛицо_Key],
+	[СтруктурнаяЕдиница],
+	[СтруктурнаяЕдиница_Type],
+	[МесяцНалоговогоПериода],
+	[ВидПлатежа],
+	[Организация_Key],
+	[Налогоплательщик_Key],
+	[ПодразделениеОрганизации_Key],
+	[Отчисление],
+	[ВидСтроки],
+	[ДатаНачала],
+	[ДатаОкончания]
+RESIDENT 
+	RestConnectorMasterTable
+WHERE 
+	NOT IsNull([__FK_value]);
+
+DROP TABLE RestConnectorMasterTable;
+
+Unqualify *;
+
+DisConnect;
+
+EndSub;

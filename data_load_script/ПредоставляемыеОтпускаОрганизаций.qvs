@@ -1,0 +1,54 @@
+///$tab ПредоставляемыеОтпускаОрганизаций
+Sub ПредоставляемыеОтпускаОрганизаций;
+
+Let vURL = '$(vServer)/InformationRegister_ПредоставляемыеОтпускаОрганизаций?$format=json';
+
+CUSTOM Connect To $(vConnectionString);
+
+RestConnectorMasterTable:
+NoConcatenate
+SQL
+SELECT
+	"__KEY_root",
+	(SELECT 
+		"Period",
+		"Организация_Key",
+		"ПодразделениеОрганизации_Key",
+		"Должность_Key",
+		"ФизЛицо_Key",
+		"ВидТрудовогоОтпуска_Key",
+		"РазмерОтпуска",
+		"Действие",
+        "__FK_value"
+	FROM "value" FK "__FK_value")
+FROM JSON (wrap on) "root" PK "__KEY_root"
+WITH CONNECTION(
+URL "$(vURL)",
+HTTPHEADER "Authorization" "Basic $(vCreds)")
+;
+
+Qualify *;
+
+[ПредоставляемыеОтпускаОрганизаций]:
+NoConcatenate
+LOAD	
+	[Period],
+	[Организация_Key],
+	[ПодразделениеОрганизации_Key],
+	[Должность_Key],
+	[ФизЛицо_Key],
+	[ВидТрудовогоОтпуска_Key],
+	[РазмерОтпуска],
+	[Действие]
+RESIDENT 
+	RestConnectorMasterTable
+WHERE 
+	NOT IsNull([__FK_value]);
+
+DROP TABLE RestConnectorMasterTable;
+
+Unqualify *;
+
+DisConnect;
+
+EndSub;

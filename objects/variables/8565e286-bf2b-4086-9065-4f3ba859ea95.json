@@ -1,0 +1,14 @@
+{
+  "qInfo": {
+    "qId": "8565e286-bf2b-4086-9065-4f3ba859ea95",
+    "qType": "variable"
+  },
+  "qMetaDef": {},
+  "qName": "File",
+  "qNumberPresentation": {
+    "qType": "U",
+    "qnDec": 10,
+    "qUseThou": 0
+  },
+  "qDefinition": "lib://HR:DataFiles/ШР_2022-09-14.xlsx"
+}

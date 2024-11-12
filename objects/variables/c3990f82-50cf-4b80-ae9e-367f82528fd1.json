@@ -1,0 +1,14 @@
+{
+  "qInfo": {
+    "qId": "c3990f82-50cf-4b80-ae9e-367f82528fd1",
+    "qType": "variable"
+  },
+  "qMetaDef": {},
+  "qName": "vStartDate",
+  "qNumberPresentation": {
+    "qType": "U",
+    "qnDec": 10,
+    "qUseThou": 0
+  },
+  "qDefinition": "01.01.2019"
+}

@@ -1,0 +1,58 @@
+///$tab ЗанятыеШтатныеЕдиницыОрганизаций
+Sub ЗанятыеШтатныеЕдиницыОрганизаций;
+
+Let vURL = '$(vServer)/AccumulationRegister_ЗанятыеШтатныеЕдиницыОрганизаций_RecordType?$select=Period,ПодразделениеОрганизации_Key,Должность_Key,ТарифныйРазряд_Key,КоличествоСтавок,Сотрудник_Key,Recorder_Type,RecordType,LineNumber,Active&$format=json';
+
+CUSTOM Connect To $(vConnectionString);
+
+RestConnectorMasterTable:
+NoConcatenate
+SQL
+SELECT
+	"__KEY_root",
+	(SELECT 
+		"Period",
+		"ПодразделениеОрганизации_Key",
+		"Должность_Key",
+		"ТарифныйРазряд_Key",
+		"КоличествоСтавок",
+		"Сотрудник_Key",
+		"Recorder_Type",
+		"RecordType",
+		"LineNumber",
+		"Active",
+		"__FK_value"
+	FROM "value" FK "__FK_value")
+FROM JSON (wrap on) "root" PK "__KEY_root"
+WITH CONNECTION(
+URL "$(vURL)",
+HTTPHEADER "Authorization" "Basic $(vCreds)")
+;
+
+Qualify *;
+
+[ЗанятыеШтатныеЕдиницыОрганизаций]:
+NoConcatenate
+LOAD	
+	[Period],
+	[ПодразделениеОрганизации_Key],
+	[Должность_Key],
+	[ТарифныйРазряд_Key],
+	[КоличествоСтавок],
+	[Сотрудник_Key],
+	[Recorder_Type],
+	[RecordType],
+	[LineNumber],
+	[Active]
+RESIDENT 
+	RestConnectorMasterTable
+WHERE 
+	NOT IsNull([__FK_value]);
+
+DROP TABLE RestConnectorMasterTable;
+
+Unqualify *;
+
+DisConnect;
+
+EndSub;

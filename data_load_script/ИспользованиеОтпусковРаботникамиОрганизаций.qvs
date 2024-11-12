@@ -1,0 +1,73 @@
+///$tab ИспользованиеОтпусковРаботникамиОрганизаций
+Sub ИспользованиеОтпусковРаботникамиОрганизаций;
+
+Let vURL = '$(vServer)/AccumulationRegister_ИспользованиеОтпусковРаботникамиОрганизаций_RecordType?$format=json';
+
+CUSTOM Connect To $(vConnectionString);
+
+RestConnectorMasterTable:
+NoConcatenate
+SQL
+SELECT
+	"__KEY_root",
+	(SELECT 
+		"Period",
+		"Recorder",
+		"Recorder_Type",
+		"LineNumber",
+		"Active",
+		"Сотрудник_Key",
+		"Организация_Key",
+		"ВидТрудовогоОтпуска_Key",
+		"УдалитьФизЛицо_Key",
+		"УдалитьПриказ_Key",
+		"ИспользованоДней",
+		"РабочийГодС",
+		"РабочийГодПо",
+		"ВидСтроки",
+		"ДатаНачала",
+		"ДатаОкончания",
+		"Сотрудник@navigationLinkUrl",
+		"Организация@navigationLinkUrl",
+		"ВидТрудовогоОтпуска@navigationLinkUrl",
+		"__FK_value"
+	FROM "value" FK "__FK_value")
+FROM JSON (wrap on) "root" PK "__KEY_root"
+WITH CONNECTION(
+URL "$(vURL)",
+HTTPHEADER "Authorization" "Basic $(vCreds)")
+;
+
+Qualify *;
+
+[ИспользованиеОтпусковРаботникамиОрганизаций]:
+NoConcatenate
+LOAD	
+	[Period],
+	[Recorder],
+	[Recorder_Type],
+	[LineNumber],
+	[Active],
+	[Сотрудник_Key],
+	[Организация_Key],
+	[ВидТрудовогоОтпуска_Key],
+	[УдалитьФизЛицо_Key],
+	[УдалитьПриказ_Key],
+	[ИспользованоДней],
+	[РабочийГодС],
+	[РабочийГодПо],
+	[ВидСтроки],
+	[ДатаНачала],
+	[ДатаОкончания]
+RESIDENT 
+	RestConnectorMasterTable
+WHERE 
+	NOT IsNull([__FK_value]);
+
+DROP TABLE RestConnectorMasterTable;
+
+Unqualify *;
+
+DisConnect;
+
+EndSub;

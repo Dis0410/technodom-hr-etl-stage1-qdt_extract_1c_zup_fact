@@ -1,0 +1,14 @@
+{
+  "qInfo": {
+    "qId": "50655391-83d1-4554-ab96-2d17a29db9f6",
+    "qType": "variable"
+  },
+  "qMetaDef": {},
+  "qName": "vTime",
+  "qNumberPresentation": {
+    "qType": "U",
+    "qnDec": 10,
+    "qUseThou": 0
+  },
+  "qDefinition": "03.02.2023 09:06:39"
+}

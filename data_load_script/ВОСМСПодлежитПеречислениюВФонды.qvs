@@ -1,0 +1,74 @@
+///$tab ВОСМСПодлежитПеречислениюВФонды
+Sub ВОСМСПодлежитПеречислениюВФонды;
+
+Let vURL = '$(vServer)/AccumulationRegister_ВОСМСПодлежитПеречислениюВФонды_RecordType?$filter=year(Period)%20ge%202019&$format=json';
+
+CUSTOM Connect To $(vConnectionString);
+
+RestConnectorMasterTable:
+NoConcatenate
+SQL
+SELECT
+	"__KEY_root",
+	(SELECT 
+		"Period",
+		"Recorder",
+		"Recorder_Type",
+		"LineNumber",
+		"Active",
+		"RecordType",
+		"ФизЛицо",
+		"ФизЛицо_Type",
+		"СтруктурнаяЕдиница",
+		"СтруктурнаяЕдиница_Type",
+		"МесяцНалоговогоПериода",
+		"МесяцВыплатыДоходов",
+		"Организация_Key",
+		"Налогоплательщик_Key",
+		"ПодразделениеОрганизации_Key",
+		"Взнос",
+		"ВидСтроки",
+		"Организация@navigationLinkUrl",
+		"Налогоплательщик@navigationLinkUrl",
+		"__FK_value"
+	FROM "value" FK "__FK_value")
+FROM JSON (wrap on) "root" PK "__KEY_root"
+WITH CONNECTION(
+URL "$(vURL)",
+HTTPHEADER "Authorization" "Basic $(vCreds)")
+;
+
+Qualify *;
+
+[ВОСМСПодлежитПеречислениюВФонды]:
+NoConcatenate
+LOAD	
+	[Period],
+	[Recorder],
+	[Recorder_Type],
+	[LineNumber],
+	[Active],
+	[RecordType],
+	[ФизЛицо],
+	[ФизЛицо_Type],
+	[СтруктурнаяЕдиница],
+	[СтруктурнаяЕдиница_Type],
+	[МесяцНалоговогоПериода],
+	[МесяцВыплатыДоходов],
+	[Организация_Key],
+	[Налогоплательщик_Key],
+	[ПодразделениеОрганизации_Key],
+	[Взнос],
+	[ВидСтроки]
+RESIDENT 
+	RestConnectorMasterTable
+WHERE 
+	NOT IsNull([__FK_value]);
+
+DROP TABLE RestConnectorMasterTable;
+
+Unqualify *;
+
+DisConnect;
+
+EndSub;

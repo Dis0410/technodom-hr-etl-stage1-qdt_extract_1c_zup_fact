@@ -1,0 +1,14 @@
+{
+  "qInfo": {
+    "qId": "8419a0f6-22f1-4b26-9031-2c31e560a12d",
+    "qType": "variable"
+  },
+  "qMetaDef": {},
+  "qName": "vStep",
+  "qNumberPresentation": {
+    "qType": "U",
+    "qnDec": 10,
+    "qUseThou": 0
+  },
+  "qDefinition": "11"
+}

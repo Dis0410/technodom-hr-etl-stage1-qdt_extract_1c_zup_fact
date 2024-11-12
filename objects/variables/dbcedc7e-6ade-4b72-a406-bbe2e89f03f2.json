@@ -1,0 +1,14 @@
+{
+  "qInfo": {
+    "qId": "dbcedc7e-6ade-4b72-a406-bbe2e89f03f2",
+    "qType": "variable"
+  },
+  "qMetaDef": {},
+  "qName": "vTimeDiff",
+  "qNumberPresentation": {
+    "qType": "U",
+    "qnDec": 10,
+    "qUseThou": 0
+  },
+  "qDefinition": "00:16:48"
+}

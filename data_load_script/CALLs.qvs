@@ -1,0 +1,45 @@
+///$tab CALLs
+Let vServer = 'http://vm-sql-zup02/ZUP/odata/standard.odata'; // Test
+Let vServer = 'http://vm-cont/TD_ZP/odata/standard.odata'; // Prod
+Let vURL = '$(vServer)/Catalog_СпособыОтраженияЗарплатыВРеглУчете?$select=Ref_Key,DeletionMark,Description&$format=json';
+Let vCreds = 'ZGF0YW5vbWl4OjEyMzRxd2Vy';
+Let vConnectionString = '
+"Provider=QvRestConnector.exe;url=$(vURL);
+timeout=1000;readwritetimeout=10000;method=GET;httpProtocol=1.1;isKeepAlive=true;
+bodyEncoding=UTF-8;sendExpect100Continue=True;autoDetectResponseType=true;checkResponseTypeOnTestConnection=true;
+keyGenerationStrategy=0;XMLDTD=0;authSchema=anonymous;ServerCertificateValidation=UseTrust;
+checkCertificateRevocation=false;
+useCertificate=No;certificateStoreLocation=CurrentUser;certificateStoreName=My;
+PaginationType=None;allowResponseHeaders=false;allowHttpsOnly=false";'
+;
+
+Call ОсновныеНачисленияРаботниковОрганизаций;
+Call ДополнительныеНачисленияРаботниковОрганизаций;
+Call БУОсновныеНачисления;
+Call БУДополнительныеНачисления;
+Call ЗанятыеШтатныеЕдиницыОрганизаций;
+Call ИспользованиеОтпусковРаботникамиОрганизаций;
+Call ПредоставляемыеОтпускаОрганизаций;
+Call РаботникиОрганизаций;
+Call РегламентированныйПроизводственныйКалендарь;
+Call УвольнениеИзОрганизаций;
+Call УдержанияРаботниковОрганизаций;
+Call ШтатноеРасписаниеОрганизаций;
+Call СостояниеРаботниковОрганизаций;
+Call СостояниеМагазинов;
+Call СОРасчетыСФондами;
+Call СНИсчисленный;
+Call ООСМСРасчетыСФондами;
+Call ВОСМСПодлежитПеречислениюВФонды; // Just in case
+Call ВОСМСРасчетыСФондами;
+Call ИПНРасчетыСБюджетом;
+Call ОПВРасчетыСФондами;
+Call ДоговорНаВыполнениеРаботСФизЛицом;
+Call КатегорииТовараПоСотрудникам;
+Call РабочееВремяРаботниковОрганизаций;
+Call КадровоеПеремещениеОрганизаций;
+Call КадровоеПеремещениеОрганизаций_РаботникиОрганизации;
+Call КадровоеПеремещениеОрганизаций_ОсновныеНачисления;
+Call ГрафикСменности;
+Call ССЧ;
+Call НакопленныеДниОтпуска;

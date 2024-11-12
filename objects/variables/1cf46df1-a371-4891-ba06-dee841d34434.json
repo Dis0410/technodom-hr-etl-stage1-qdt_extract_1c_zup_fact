@@ -1,0 +1,14 @@
+{
+  "qInfo": {
+    "qId": "1cf46df1-a371-4891-ba06-dee841d34434",
+    "qType": "variable"
+  },
+  "qMetaDef": {},
+  "qName": "vMaxDate",
+  "qNumberPresentation": {
+    "qType": "U",
+    "qnDec": 10,
+    "qUseThou": 0
+  },
+  "qDefinition": "01.10.2022"
+}

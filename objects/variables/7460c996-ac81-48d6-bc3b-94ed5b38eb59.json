@@ -1,0 +1,14 @@
+{
+  "qInfo": {
+    "qId": "7460c996-ac81-48d6-bc3b-94ed5b38eb59",
+    "qType": "variable"
+  },
+  "qMetaDef": {},
+  "qName": "vStartDateEmployee",
+  "qNumberPresentation": {
+    "qType": "U",
+    "qnDec": 10,
+    "qUseThou": 0
+  },
+  "qDefinition": "14.01.2003"
+}

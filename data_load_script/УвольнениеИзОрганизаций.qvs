@@ -1,0 +1,66 @@
+///$tab УвольнениеИзОрганизаций
+Sub УвольнениеИзОрганизаций;
+
+Let vURL = '$(vServer)/Document_УвольнениеИзОрганизаций_РаботникиОрганизации?$format=json';
+
+CUSTOM Connect To $(vConnectionString);
+
+RestConnectorMasterTable:
+NoConcatenate
+SQL
+SELECT
+	"__KEY_root",
+	(SELECT 
+		"Ref_Key",
+		"LineNumber",
+		"Сотрудник_Key",
+		"Физлицо_Key",
+		"ДатаУвольнения",
+		"СтатьяЗаконаОТрудеРК_Key",
+		"РеквизитыДокументаОснования",
+		"ДнейОтпуска",
+		"ПрекращатьСтандартныеВычеты",
+		"Сторно",
+		"УдалитьПриказ_Key",
+		"Censure_Key",
+		"Сотрудник@navigationLinkUrl",
+		"Физлицо@navigationLinkUrl",
+		"СтатьяЗаконаОТрудеРК@navigationLinkUrl",
+		"Censure@navigationLinkUrl",
+		"__FK_value"
+	FROM "value" FK "__FK_value")
+FROM JSON (wrap on) "root" PK "__KEY_root"
+WITH CONNECTION(
+URL "$(vURL)",
+HTTPHEADER "Authorization" "Basic $(vCreds)")
+;
+
+Qualify *;
+
+[УвольнениеИзОрганизаций]:
+NoConcatenate
+LOAD	
+	[Ref_Key],
+	[LineNumber],
+	[Сотрудник_Key],
+	[Физлицо_Key],
+	[ДатаУвольнения],
+	[СтатьяЗаконаОТрудеРК_Key],
+	[РеквизитыДокументаОснования],
+	[ДнейОтпуска],
+	[ПрекращатьСтандартныеВычеты],
+	[Сторно],
+	[УдалитьПриказ_Key],
+	[Censure_Key]
+RESIDENT 
+	RestConnectorMasterTable
+WHERE 
+	NOT IsNull([__FK_value]);
+
+DROP TABLE RestConnectorMasterTable;
+
+Unqualify *;
+
+DisConnect;
+
+EndSub;

@@ -1,0 +1,14 @@
+{
+  "qInfo": {
+    "qId": "42c705c1-d4fa-4c07-bb29-237dd048d996",
+    "qType": "variable"
+  },
+  "qMetaDef": {},
+  "qName": "vEndDate",
+  "qNumberPresentation": {
+    "qType": "U",
+    "qnDec": 10,
+    "qUseThou": 0
+  },
+  "qDefinition": "07.02.2023"
+}

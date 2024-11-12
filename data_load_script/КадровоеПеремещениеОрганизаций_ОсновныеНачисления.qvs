@@ -1,0 +1,109 @@
+///$tab КадровоеПеремещениеОрганизаций_ОсновныеНачисления
+Sub КадровоеПеремещениеОрганизаций_ОсновныеНачисления;
+
+Let vURL = '$(vServer)/Document_КадровоеПеремещениеОрганизаций_ОсновныеНачисления?$format=json';
+
+CUSTOM Connect To $(vConnectionString);
+
+RestConnectorMasterTable:
+NoConcatenate
+SQL
+SELECT
+	"__KEY_root",
+	(SELECT 
+		"Ref_Key",
+		"LineNumber",
+		"Сотрудник_Key",
+		"ФизЛицо_Key",
+		"Действие",
+		"ВидРасчета_Key",
+		"Показатель1",
+		"Валюта1_Key",
+		"ТарифныйРазряд1_Key",
+		"Показатель2",
+		"Валюта2_Key",
+		"ТарифныйРазряд2_Key",
+		"Показатель3",
+		"Валюта3_Key",
+		"ТарифныйРазряд3_Key",
+		"Показатель4",
+		"Валюта4_Key",
+		"ТарифныйРазряд4_Key",
+		"Показатель5",
+		"Валюта5_Key",
+		"ТарифныйРазряд5_Key",
+		"Показатель6",
+		"Валюта6_Key",
+		"ТарифныйРазряд6_Key",
+		"Сторно",
+		"УдалитьПриказ_Key",
+		"Сотрудник@navigationLinkUrl",
+		"ФизЛицо@navigationLinkUrl",
+		"ВидРасчета@navigationLinkUrl",
+		"Валюта1@navigationLinkUrl",
+		"Валюта2@navigationLinkUrl",
+		"Валюта3@navigationLinkUrl",
+		"Валюта4@navigationLinkUrl",
+		"Валюта5@navigationLinkUrl",
+		"Валюта6@navigationLinkUrl",
+		"__FK_value"
+	FROM "value" FK "__FK_value")
+FROM JSON (wrap on) "root" PK "__KEY_root"
+WITH CONNECTION(
+URL "$(vURL)",
+HTTPHEADER "Authorization" "Basic $(vCreds)")
+;
+
+Qualify *;
+
+[КадровоеПеремещениеОрганизаций_ОсновныеНачисления]:
+NoConcatenate
+LOAD	
+	[Ref_Key],
+	[LineNumber],
+	[Сотрудник_Key],
+	[ФизЛицо_Key],
+	[Действие],
+	[ВидРасчета_Key],
+	[Показатель1],
+	[Валюта1_Key],
+	[ТарифныйРазряд1_Key],
+	[Показатель2],
+	[Валюта2_Key],
+	[ТарифныйРазряд2_Key],
+	[Показатель3],
+	[Валюта3_Key],
+	[ТарифныйРазряд3_Key],
+	[Показатель4],
+	[Валюта4_Key],
+	[ТарифныйРазряд4_Key],
+	[Показатель5],
+	[Валюта5_Key],
+	[ТарифныйРазряд5_Key],
+	[Показатель6],
+	[Валюта6_Key],
+	[ТарифныйРазряд6_Key],
+	[Сторно],
+	[УдалитьПриказ_Key],
+	[Сотрудник@navigationLinkUrl],
+	[ФизЛицо@navigationLinkUrl],
+	[ВидРасчета@navigationLinkUrl],
+	[Валюта1@navigationLinkUrl],
+	[Валюта2@navigationLinkUrl],
+	[Валюта3@navigationLinkUrl],
+	[Валюта4@navigationLinkUrl],
+	[Валюта5@navigationLinkUrl],
+	[Валюта6@navigationLinkUrl],
+	[__FK_value] AS [__KEY_root]
+RESIDENT 
+	RestConnectorMasterTable
+WHERE 
+	NOT IsNull([__FK_value]);
+
+DROP TABLE RestConnectorMasterTable;
+
+Unqualify *;
+
+DisConnect;
+
+EndSub;

@@ -1,0 +1,105 @@
+///$tab КадровоеПеремещениеОрганизаций_РаботникиОрганизации
+Sub КадровоеПеремещениеОрганизаций_РаботникиОрганизации;
+
+Let vURL = '$(vServer)/Document_КадровоеПеремещениеОрганизаций_РаботникиОрганизации?$format=json';
+
+CUSTOM Connect To $(vConnectionString);
+
+RestConnectorMasterTable:
+NoConcatenate
+SQL
+SELECT
+	"__KEY_root",
+	(SELECT 
+		"Ref_Key",
+		"LineNumber",
+		"Сотрудник_Key",
+		"ФизЛицо_Key",
+		"ДатаНачала",
+		"ДатаОкончания",
+		"ПроизошедшееСобытие",
+		"ПодразделениеОрганизации_Key",
+		"Должность_Key",
+		"ТарифныйРазряд_Key",
+		"ЗанимаемыхСтавок",
+		"УдалитьТабельныйНомер",
+		"СпособРасчета",
+		"ГрафикРаботы_Key",
+		"ВидОснованияПеревода",
+		"ОснованиеПеремещения",
+		"СтатьяЗаконаОТрудеРК_Key",
+		"ИсчислятьОППВ",
+		"Сторно",
+		"УдалитьПриказ_Key",
+		"Местонахождение_Key",
+		"Censure_Key",
+		"НомерДопСоглашения",
+		"ВидПриказаПеремещения",
+		"КатегорияТовара_Key",
+		"Сотрудник@navigationLinkUrl",
+		"ФизЛицо@navigationLinkUrl",
+		"ПодразделениеОрганизации@navigationLinkUrl",
+		"Должность@navigationLinkUrl",
+		"ГрафикРаботы@navigationLinkUrl",
+		"Местонахождение@navigationLinkUrl",
+		"КатегорияТовара@navigationLinkUrl",
+		"СтатьяЗаконаОТрудеРК@navigationLinkUrl",
+		"__FK_value"
+	FROM "value" FK "__FK_value")
+FROM JSON (wrap on) "root" PK "__KEY_root"
+WITH CONNECTION(
+URL "$(vURL)",
+HTTPHEADER "Authorization" "Basic $(vCreds)")
+;
+
+Qualify *;
+
+[КадровоеПеремещениеОрганизаций_РаботникиОрганизации]:
+NoConcatenate
+LOAD	
+	[Ref_Key],
+	[LineNumber],
+	[Сотрудник_Key],
+	[ФизЛицо_Key],
+	[ДатаНачала],
+	[ДатаОкончания],
+	[ПроизошедшееСобытие],
+	[ПодразделениеОрганизации_Key],
+	[Должность_Key],
+	[ТарифныйРазряд_Key],
+	[ЗанимаемыхСтавок],
+	[УдалитьТабельныйНомер],
+	[СпособРасчета],
+	[ГрафикРаботы_Key],
+	[ВидОснованияПеревода],
+	[ОснованиеПеремещения],
+	[СтатьяЗаконаОТрудеРК_Key],
+	[ИсчислятьОППВ],
+	[Сторно],
+	[УдалитьПриказ_Key],
+	[Местонахождение_Key],
+	[Censure_Key],
+	[НомерДопСоглашения],
+	[ВидПриказаПеремещения],
+	[КатегорияТовара_Key],
+	[Сотрудник@navigationLinkUrl],
+	[ФизЛицо@navigationLinkUrl],
+	[ПодразделениеОрганизации@navigationLinkUrl],
+	[Должность@navigationLinkUrl],
+	[ГрафикРаботы@navigationLinkUrl],
+	[Местонахождение@navigationLinkUrl],
+	[КатегорияТовара@navigationLinkUrl],
+	[СтатьяЗаконаОТрудеРК@navigationLinkUrl],
+	[__FK_value] AS [__KEY_root]
+RESIDENT 
+	RestConnectorMasterTable
+WHERE 
+	NOT IsNull([__FK_value]);
+
+DROP TABLE RestConnectorMasterTable;
+
+Unqualify *;
+
+DisConnect;
+
+EndSub;

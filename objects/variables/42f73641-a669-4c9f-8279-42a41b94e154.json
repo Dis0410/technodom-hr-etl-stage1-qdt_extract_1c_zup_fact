@@ -1,0 +1,14 @@
+{
+  "qInfo": {
+    "qId": "42f73641-a669-4c9f-8279-42a41b94e154",
+    "qType": "variable"
+  },
+  "qMetaDef": {},
+  "qName": "vMinDate",
+  "qNumberPresentation": {
+    "qType": "U",
+    "qnDec": 10,
+    "qUseThou": 0
+  },
+  "qDefinition": "02.07.2012"
+}

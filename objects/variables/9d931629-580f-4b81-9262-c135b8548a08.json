@@ -1,0 +1,14 @@
+{
+  "qInfo": {
+    "qId": "9d931629-580f-4b81-9262-c135b8548a08",
+    "qType": "variable"
+  },
+  "qMetaDef": {},
+  "qName": "vStartDateVacation",
+  "qNumberPresentation": {
+    "qType": "U",
+    "qnDec": 10,
+    "qUseThou": 0
+  },
+  "qDefinition": "01.01.2018"
+}

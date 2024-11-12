@@ -1,0 +1,52 @@
+///$tab РегламентированныйПроизводственныйКалендарь
+Sub РегламентированныйПроизводственныйКалендарь;
+
+Let vURL = '$(vServer)/InformationRegister_РегламентированныйПроизводственныйКалендарь?$format=json';
+
+CUSTOM Connect To $(vConnectionString);
+
+RestConnectorMasterTable:
+NoConcatenate
+SQL
+SELECT
+	"__KEY_root",
+	(SELECT 
+		"ДатаКалендаря",
+		"Год",
+		"Пятидневка",
+		"Шестидневка",
+		"КалендарныеДни",
+		"ВидДня",
+		"ГосударственныйВыходнойДень",
+		"__FK_value"
+	FROM "value" FK "__FK_value")
+FROM JSON (wrap on) "root" PK "__KEY_root"
+WITH CONNECTION(
+URL "$(vURL)",
+HTTPHEADER "Authorization" "Basic $(vCreds)")
+;
+
+Qualify *;
+
+[РегламентированныйПроизводственныйКалендарь]:
+NoConcatenate
+LOAD	
+	[ДатаКалендаря],
+	[Год],
+	[Пятидневка],
+	[Шестидневка],
+	[КалендарныеДни],
+	[ВидДня],
+	[ГосударственныйВыходнойДень]
+RESIDENT 
+	RestConnectorMasterTable
+WHERE 
+	NOT IsNull([__FK_value]);
+
+DROP TABLE RestConnectorMasterTable;
+
+Unqualify *;
+
+DisConnect;
+
+EndSub;

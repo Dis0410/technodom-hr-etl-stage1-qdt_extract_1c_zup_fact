@@ -1,0 +1,56 @@
+///$tab УдержанияРаботниковОрганизаций
+Sub УдержанияРаботниковОрганизаций;
+
+Let vURL = '$(vServer)/CalculationRegister_УдержанияРаботниковОрганизаций_RecordType?$filter=year(RegistrationPeriod)%20ge%202019&$select=RegistrationPeriod,CalculationType_Key,Сотрудник_Key,ФизЛицо_Key,Организация_Key,Результат,ПодразделениеОрганизации_Key,ОбособленноеПодразделение_Key,СпособОтраженияВБухучете_Key&$format=json';
+
+CUSTOM Connect To $(vConnectionString);
+
+RestConnectorMasterTable:
+NoConcatenate
+SQL
+SELECT
+	"__KEY_root",
+	(SELECT 
+		"RegistrationPeriod",
+        "CalculationType_Key",
+		"Сотрудник_Key",
+		"ФизЛицо_Key",
+		"Организация_Key",
+		"Результат",
+		"ПодразделениеОрганизации_Key",
+		"ОбособленноеПодразделение_Key",
+		"СпособОтраженияВБухучете_Key",
+		"__FK_value"
+	FROM "value" FK "__FK_value")
+FROM JSON (wrap on) "root" PK "__KEY_root"
+WITH CONNECTION(
+URL "$(vURL)",
+HTTPHEADER "Authorization" "Basic $(vCreds)")
+;
+
+Qualify *;
+
+[УдержанияРаботниковОрганизаций]:
+NoConcatenate
+LOAD	
+	[RegistrationPeriod],
+    [CalculationType_Key],
+	[Сотрудник_Key],
+	[ФизЛицо_Key],
+	[Организация_Key],
+	[Результат],
+	[ПодразделениеОрганизации_Key],
+	[ОбособленноеПодразделение_Key],
+	[СпособОтраженияВБухучете_Key]
+RESIDENT 
+	RestConnectorMasterTable
+WHERE 
+	NOT IsNull([__FK_value]);
+
+DROP TABLE RestConnectorMasterTable;
+
+Unqualify *;
+
+DisConnect;
+
+EndSub;

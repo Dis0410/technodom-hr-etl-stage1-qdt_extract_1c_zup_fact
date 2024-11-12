@@ -1,0 +1,15 @@
+{
+  "qInfo": {
+    "qId": "1503ebfa-b313-4952-bff6-88342efc3275",
+    "qType": "variable"
+  },
+  "qMetaDef": {},
+  "qName": "vMonthDiff",
+  "qNumberPresentation": {
+    "qType": "U",
+    "qnDec": 10,
+    "qUseThou": 0
+  },
+  "qDefinition": "((Year(Today(1))*12) + Month(Today(2))) - (((Year($1)*12) + Month($1)))",
+  "qIsScriptCreated": true
+}

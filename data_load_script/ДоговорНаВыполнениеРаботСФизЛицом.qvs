@@ -1,0 +1,103 @@
+///$tab ДоговорНаВыполнениеРаботСФизЛицом
+Sub ДоговорНаВыполнениеРаботСФизЛицом;
+
+Let vURL = '$(vServer)/Document_ДоговорНаВыполнениеРаботСФизЛицом?$format=json';
+
+CUSTOM Connect To $(vConnectionString);
+
+RestConnectorMasterTable:
+NoConcatenate
+SQL
+SELECT
+	"__KEY_root",
+	(SELECT 
+		"Ref_Key",
+		"DataVersion",
+		"DeletionMark",
+		"Number",
+		"Date",
+		"Posted",
+		"Сотрудник_Key",
+		"ФизЛицо_Key",
+		"Организация_Key",
+		"ВалютаДокумента_Key",
+		"СуммаЗаРаботу",
+		"ВидРасчета_Key",
+		"ВидДоговора",
+		"ДатаНачала",
+		"ДатаОкончания",
+		"ПодразделениеОрганизации_Key",
+		"ХарактерОплаты",
+		"Должность_Key",
+		"СпособОтраженияВБухучете_Key",
+		"Автор_Key",
+		"Ответственный_Key",
+		"Комментарий",
+		"РучнаяКорректировка",
+		"ДокументОснование_Key",
+		"ЗанимаемыхСтавок",
+		"Услуга",
+		"Контрагент_Key",
+		"Сотрудник@navigationLinkUrl",
+		"ФизЛицо@navigationLinkUrl",
+		"Организация@navigationLinkUrl",
+		"ВалютаДокумента@navigationLinkUrl",
+		"ВидРасчета@navigationLinkUrl",
+		"ПодразделениеОрганизации@navigationLinkUrl",
+		"Должность@navigationLinkUrl",
+		"Автор@navigationLinkUrl",
+		"Ответственный@navigationLinkUrl",
+		"ДокументОснование@navigationLinkUrl",
+		"Контрагент@navigationLinkUrl",
+		"__FK_value"
+	FROM "value" FK "__FK_value")
+FROM JSON (wrap on) "root" PK "__KEY_root"
+WITH CONNECTION(
+URL "$(vURL)",
+HTTPHEADER "Authorization" "Basic $(vCreds)")
+;
+
+Qualify *;
+
+[ДоговорНаВыполнениеРаботСФизЛицом]:
+NoConcatenate
+LOAD	
+	[Ref_Key],
+	[DataVersion],
+	[DeletionMark],
+	[Number],
+	[Date],
+	[Posted],
+	[Сотрудник_Key],
+	[ФизЛицо_Key],
+	[Организация_Key],
+	[ВалютаДокумента_Key],
+	[СуммаЗаРаботу],
+	[ВидРасчета_Key],
+	[ВидДоговора],
+	[ДатаНачала],
+	[ДатаОкончания],
+	[ПодразделениеОрганизации_Key],
+	[ХарактерОплаты],
+	[Должность_Key],
+	[СпособОтраженияВБухучете_Key],
+	[Автор_Key],
+	[Ответственный_Key],
+	[Комментарий],
+	[РучнаяКорректировка],
+	[ДокументОснование_Key],
+	[ЗанимаемыхСтавок],
+	[Услуга],
+	[Контрагент_Key]
+RESIDENT 
+	RestConnectorMasterTable
+WHERE 
+	NOT IsNull([__FK_value]);
+
+DROP TABLE RestConnectorMasterTable;
+
+Unqualify *;
+
+DisConnect;
+
+EndSub;

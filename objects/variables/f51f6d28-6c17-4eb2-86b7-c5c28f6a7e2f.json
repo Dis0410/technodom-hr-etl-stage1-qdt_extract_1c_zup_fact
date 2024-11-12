@@ -1,0 +1,14 @@
+{
+  "qInfo": {
+    "qId": "f51f6d28-6c17-4eb2-86b7-c5c28f6a7e2f",
+    "qType": "variable"
+  },
+  "qMetaDef": {},
+  "qName": "vOrganization",
+  "qNumberPresentation": {
+    "qType": "U",
+    "qnDec": 10,
+    "qUseThou": 0
+  },
+  "qDefinition": "e8ba31bc-4603-11ec-812c-0050568df702"
+}

@@ -1,0 +1,14 @@
+{
+  "qInfo": {
+    "qId": "033c065e-f82a-46c6-8f73-93af6f9ba4f9",
+    "qType": "variable"
+  },
+  "qMetaDef": {},
+  "qName": "vReloadMode",
+  "qNumberPresentation": {
+    "qType": "U",
+    "qnDec": 10,
+    "qUseThou": 0
+  },
+  "qDefinition": "2"
+}

@@ -1,0 +1,54 @@
+///$tab СостояниеМагазинов
+Sub СостояниеМагазинов;
+
+Let vURL = '$(vServer)/InformationRegister_СостояниеМагазинов?$format=json';
+
+CUSTOM Connect To $(vConnectionString);
+
+RestConnectorMasterTable:
+NoConcatenate
+SQL
+SELECT
+	"__KEY_root",
+	(SELECT 
+		"Period",
+		"Магазин_Key",
+		"Работает",
+		"Направление",
+		"Пилот",
+		"ПунктВыдачи",
+		"НаправлениеПВЗ_Key",
+		"Магазин@navigationLinkUrl",
+		"НаправлениеПВЗ@navigationLinkUrl",
+		"__FK_value"
+	FROM "value" FK "__FK_value")
+FROM JSON (wrap on) "root" PK "__KEY_root"
+WITH CONNECTION(
+URL "$(vURL)",
+HTTPHEADER "Authorization" "Basic $(vCreds)")
+;
+
+Qualify *;
+
+[СостояниеМагазинов]:
+NoConcatenate
+LOAD	
+	[Period],
+	[Магазин_Key],
+	[Работает],
+	[Направление],
+	[Пилот],
+	[ПунктВыдачи],
+	[НаправлениеПВЗ_Key]
+RESIDENT 
+	RestConnectorMasterTable
+WHERE 
+	NOT IsNull([__FK_value]);
+
+DROP TABLE RestConnectorMasterTable;
+
+Unqualify *;
+
+DisConnect;
+
+EndSub;

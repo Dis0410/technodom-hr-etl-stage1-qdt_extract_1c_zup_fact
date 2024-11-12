@@ -1,0 +1,33 @@
+[
+  {
+    "created": "2024-06-27T07:42:55.85Z",
+    "datasourceID": "File_AmazonS3Connector",
+    "id": "37695aa6-43af-4b8a-a74d-8e6cdd5be239",
+    "privileges": [
+      "change_owner",
+      "change_space",
+      "delete",
+      "list",
+      "read",
+      "update"
+    ],
+    "qArchitecture": 0,
+    "qConnectStatement": "CUSTOM CONNECT TO \"provider=QvWebStorageProviderConnectorPackage.exe;sourceType=File_AmazonS3Connector;region=eu-north-1;bucketName=analytics-datanomix-hr;separateCredentials=false;\"",
+    "qCredentialsID": "b6bd5955-055d-408b-ae69-25b95c823a24",
+    "qEngineObjectID": "37695aa6-43af-4b8a-a74d-8e6cdd5be239",
+    "qID": "37695aa6-43af-4b8a-a74d-8e6cdd5be239",
+    "qLogOn": 1,
+    "qName": "Amazon_S3_Analytics_Datanomix_HR",
+    "qSeparateCredentials": false,
+    "qType": "QvWebStorageProviderConnectorPackage.exe",
+    "qri": "qri:file:s3://d3s5NBdQfqwIzTFhIiR6YHhLVFkRCTzl4lr9FnJ6J1g",
+    "tags": null,
+    "tenant": "pofb9xdqTgzOvEn4vxLg7aHqQN7gtsX1",
+    "updated": "2024-06-27T11:49:57.819Z",
+    "user": "6346342860008838629ad243",
+    "version": "V1",
+    "name": "Amazon_S3_Analytics_Datanomix_HR",
+    "type": "QvWebStorageProviderConnectorPackage.exe",
+    "connectionstring": "CUSTOM CONNECT TO \"provider=QvWebStorageProviderConnectorPackage.exe;sourceType=File_AmazonS3Connector;region=eu-north-1;bucketName=analytics-datanomix-hr;separateCredentials=false;\""
+  }
+]

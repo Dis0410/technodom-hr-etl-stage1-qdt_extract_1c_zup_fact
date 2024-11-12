@@ -1,0 +1,99 @@
+///$tab ССЧ
+Sub ССЧ;
+
+If WeekDay(Today(1), 0) = 5 then
+
+    Let vStartDate = Date('01.01.2019');
+    
+Else
+
+	Let vStartDate = Date(YearStart(AddYears(Today(1), -1)));
+
+EndIf;
+
+// Let vStartDate = Date(YearStart(AddYears(Today(1), -1)));
+Let vEndDate = Date(Today(1));
+
+Months:
+NoConcatenate
+Load
+	Date(AddMonths('$(vStartDate)', IterNo() - 1), 'MMYYYY') as Month,
+    Year(AddMonths('$(vStartDate)', IterNo() - 1)) as Year
+AutoGenerate (1)
+While
+	Date(AddMonths('$(vStartDate)', IterNo() - 1), 'MMYYYY') <= Date('$(vEndDate)', 'MMYYYY')
+;
+
+For Each vYear in FieldValueList('Year')
+
+    ССЧ_$(vYear):
+    NoConcatenate
+    Load
+        Null() as Organization
+    AutoGenerate (0);
+    
+    MonthsYear:
+    NoConcatenate
+    Load
+    	Month as MonthYear
+    Resident
+    	Months
+    Where
+    	Year = '$(vYear)'
+    ;
+
+    For Each vMonth in FieldValueList('MonthYear')
+
+        CUSTOM CONNECT TO 
+        "Provider=QvRestConnector.exe;url=http://vm-cont/TD_ZP/hs/ZupExt/GetNumberOfEmployees/?Month=$(vMonth);
+        timeout=30;readwritetimeout=300;method=GET;httpProtocol=1.1;isKeepAlive=true;
+        bodyEncoding=UTF-8;sendExpect100Continue=True;autoDetectResponseType=true;checkResponseTypeOnTestConnection=true;
+        keyGenerationStrategy=0;XMLDTD=0;authSchema=anonymous;ServerCertificateValidation=UseTrust;
+        checkCertificateRevocation=false;
+        useCertificate=No;certificateStoreLocation=CurrentUser;certificateStoreName=My;
+        PaginationType=None;allowResponseHeaders=false;allowHttpsOnly=false";
+
+        RestConnectorMasterTable:
+        SQL 
+        SELECT 
+            "__KEY_Rows",
+            (SELECT 
+                "attr:Organization" AS "Organization",
+                "attr:Department" AS "Department",
+                "attr:GUID" AS "GUID",
+                "attr:Position" AS "Position",
+                "attr:Employee" AS "Employee",
+                "attr:Fact" AS "Fact",
+                "attr:List" AS "List",
+                "attr:Month" AS "Month",
+                "__FK_Row"
+            FROM "Row" FK "__FK_Row")
+        FROM 
+            XML "Rows" PK "__KEY_Rows";
+
+        Concatenate ([ССЧ_$(vYear)])
+        LOAD
+            [Organization],
+            [Department],
+            [GUID],
+            [Position],
+            [Employee],
+            [Fact],
+            [List],
+            [Month]
+        RESIDENT 
+            RestConnectorMasterTable
+        WHERE 
+            NOT IsNull([__FK_Row]);
+
+        DROP TABLE RestConnectorMasterTable;
+
+    Next vMonth;
+    
+    Drop Table MonthsYear;
+
+Next vYear;
+
+Drop Table Months;
+
+EndSub;
