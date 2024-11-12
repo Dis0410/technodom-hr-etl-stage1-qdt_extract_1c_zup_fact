@@ -5,3 +5,4 @@ Created By DiSabban(No name specified in Profile) at Tue Nov 12 2024 17:58:23 GM
 
 Branch Name|Qlik application
 ---|---
+feature_branch|[https://tddataanalytics.eu.qlikcloud.com/sense/app/322407a6-b8ea-410b-aff2-a7fb4636d042](https://tddataanalytics.eu.qlikcloud.com/sense/app/322407a6-b8ea-410b-aff2-a7fb4636d042)
