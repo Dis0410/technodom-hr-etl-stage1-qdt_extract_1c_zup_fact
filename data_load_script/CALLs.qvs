@@ -14,6 +14,7 @@ PaginationType=None;allowResponseHeaders=false;allowHttpsOnly=false";'
 ;
 
 // Comment
+// Another comment
 
 Call ОсновныеНачисленияРаботниковОрганизаций;
 Call ДополнительныеНачисленияРаботниковОрганизаций;
