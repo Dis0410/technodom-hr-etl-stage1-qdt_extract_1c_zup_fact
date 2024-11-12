@@ -13,6 +13,8 @@ useCertificate=No;certificateStoreLocation=CurrentUser;certificateStoreName=My;
 PaginationType=None;allowResponseHeaders=false;allowHttpsOnly=false";'
 ;
 
+// Comment
+
 Call ОсновныеНачисленияРаботниковОрганизаций;
 Call ДополнительныеНачисленияРаботниковОрганизаций;
 Call БУОсновныеНачисления;
